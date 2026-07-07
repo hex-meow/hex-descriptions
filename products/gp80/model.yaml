@@ -1,0 +1,18 @@
+# 产品清单 —— 机器可校验的契约(tools/validate.py)。tag 必须等于这里的 version(gp80/v<version>)。
+model: gp80                  # == URDF <robot name>
+kind: hand                   # RobotKind: arm | base | lift | hand(夹爪/灵巧手)
+version: 0.1.0               # 描述版本;PCB 存 model+此版本
+dof: 0                       # 本版为单刚体导出:手指未建模,整体作为固定 tip 载荷参与重力补偿
+joint_names: []
+root_link: base_link         # 安装 link:经 fixed joint 接到 arm.tip_link(运行时由臂拼接整机 URDF)
+package: hex_gp80_description   # 新产品直接采用 hex_<model>_description 命名规范
+urdf: urdf/gp80.urdf
+
+provenance:
+  exporter: SW2URDF 1.6.0-4-g7f85cfe
+  exported: "2026-01-21"
+  note: 机械工程师从 SolidWorks 导出(原始 zip 含 log/DS_Store 等,已剔除);CAD 不入库
+
+todo:
+  - "确认 base_link 原点是否即法兰安装面(EE 自描述需要几何+质量+安装变换;若不是需在 URDF 或拼接处补安装变换)"
+  - "手指铰接建模(变 dof>0)时 MINOR/MAJOR 视关节命名而定"
