@@ -1,7 +1,8 @@
 # 产品清单 —— 机器可校验的契约(tools/validate.py)。tag 必须等于这里的 version(gp80/v<version>)。
-model: gp80                  # == URDF <robot name>
+model: gp80                  # == URDF <robot name>;运行时查找键(PCB 报 model 选 URDF)
 kind: hand                   # RobotKind: arm | base | lift | hand(夹爪/灵巧手)
-version: 0.1.0               # 描述版本;PCB 存 model+此版本
+version: 0.1.0               # 描述版本(仅同一硬件的描述修订;硬件不兼容变更=新 model 身份,见 06 §硬件身份)
+# hw_rev: a                  # 可选:同名硬件修订;不兼容硬件变更时新增身份并存,永不删除老身份
 dof: 0                       # 本版为单刚体导出:手指未建模,整体作为固定 tip 载荷参与重力补偿
 joint_names: []
 root_link: base_link         # 安装 link:经 fixed joint 接到 arm.tip_link(运行时由臂拼接整机 URDF)

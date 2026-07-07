@@ -1,7 +1,8 @@
 # 产品清单 —— 机器可校验的契约(tools/validate.py)。tag 必须等于这里的 version(firefly_y6/v<version>)。
-model: firefly_y6            # == URDF <robot name>;控制器按此选 /usr/share/hexmeow/urdf/<model>.urdf
+model: firefly_y6            # == URDF <robot name>;运行时查找键:控制器按此选 /usr/share/hexmeow/urdf/<model>.urdf
 kind: arm                    # RobotKind: arm | base | lift | hand
-version: 1.1.0               # 描述版本(与 proto ApiVersion 正交);PCB 存 model+此版本
+version: 1.1.0               # 描述版本(与 proto ApiVersion 正交;仅同一硬件的描述修订,硬件不兼容变更=新 model 身份,见 06)
+# hw_rev: a                  # 可选:同名硬件修订;不兼容硬件变更时新增身份并存,永不删除老身份
 dof: 6
 joint_names: [joint_1, joint_2, joint_3, joint_4, joint_5, joint_6]
 root_link: base_link
