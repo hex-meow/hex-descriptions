@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>hex_gr80_description</name>
+  <version>0.0.1</version>
+  <description>
+    URDF description of the GR80 lobster-claw gripper (end-effector, ROBOT_KIND_EE).
+    TRIAL export (0.0.1): articulated jaws via mimic joints (driver jaw_joint1, 0=closed),
+    gear follower, tcp frame; placeholder inertials and full-res collision meshes —
+    all to be replaced by the formal CAD export. See robot-overall-design 11-ee-api §9.
+  </description>
+  <maintainer email="kisonhe@icloud.com">kisonhe</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -79,12 +79,19 @@ def validate_product(product_dir: Path) -> list:
     link_names = [l.get("name") for l in links]
     joints = robot.findall("joint")
     movable = [j for j in joints if j.get("type") in MOVABLE]
-    movable_names = [j.get("name") for j in movable]
+    # mimic 从动关节不算 DOF(11-ee-api §9:一个电机一根轴;joint_names 只列 driver)。
+    drivers = [j for j in movable if j.find("mimic") is None]
+    driver_names = [j.get("name") for j in drivers]
+    all_joint_names = {j.get("name") for j in joints}
+    for j in movable:
+        m = j.find("mimic")
+        if m is not None and m.get("joint") not in all_joint_names:
+            fail(errors, f"joint {j.get('name')}: mimic 引用不存在的关节 {m.get('joint')!r}")
 
-    if len(movable) != int(manifest["dof"]):
-        fail(errors, f"URDF movable joints {len(movable)} != model.yaml dof {manifest['dof']}")
-    if movable_names != list(manifest["joint_names"] or []):
-        fail(errors, f"URDF joint order {movable_names} != model.yaml joint_names {manifest['joint_names']}")
+    if len(drivers) != int(manifest["dof"]):
+        fail(errors, f"URDF driver(non-mimic) joints {len(drivers)} != model.yaml dof {manifest['dof']}")
+    if driver_names != list(manifest["joint_names"] or []):
+        fail(errors, f"URDF driver joint order {driver_names} != model.yaml joint_names {manifest['joint_names']}")
 
     children = {j.findtext("child/[@link]") or j.find("child").get("link") for j in joints if j.find("child") is not None}
     roots = [n for n in link_names if n not in children]
@@ -100,6 +107,9 @@ def validate_product(product_dir: Path) -> list:
         name = link.get("name")
         inertial = link.find("inertial")
         if inertial is None:
+            # 纯坐标系 link(无 visual/collision,如 tcp)允许无惯量(URDF 缺省=零质量 frame)。
+            if link.find("visual") is None and link.find("collision") is None:
+                continue
             fail(errors, f"link {name}: missing <inertial> (gravity comp requires it)")
             continue
         mass = inertial.find("mass")

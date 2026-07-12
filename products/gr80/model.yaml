@@ -1,0 +1,20 @@
+# 产品清单 —— 机器可校验的契约(tools/validate.py)。tag 必须等于这里的 version(gr80/v<version>)。
+model: gr80                  # == URDF <robot name>;运行时查找键
+kind: ee                     # RobotKind: arm | base | lift | ee(HAND→EE 改名,11-ee-api §0.3)
+version: 0.0.1               # trial:手改试验导出先行入库(mock/GUI 联调用),正式导出后升 0.1.0
+dof: 1                       # driver 关节数(mimic 从动不算 DOF,11 §9;validate.py 已 mimic 感知)
+joint_names: [jaw_joint1]    # 单爪角 rad,0=全闭,0.6=全开;jaw_joint2 mimic(+1,轴反),gear_joint mimic(×2.618)
+root_link: base_link         # 安装 link:经 fixed joint 接到 arm.tip_link(运行时由臂拼接整机 URDF)
+tip_link: tcp                # 抓取中心(TCP,占位 z=0.13,按 CAD 修正)
+package: hex_gr80_description
+urdf: urdf/gr80.urdf
+
+provenance:
+  exporter: 结构同事 SW 快速试验导出 + Claude 按 11-ee-api §9 改造(re-zero 到全闭、mimic、tcp)
+  exported: "2026-07-12"
+  note: trial;导出契约(零位=全闭/mimic 写法/tcp/齿轮方向/正式导出清单)嵌在 URDF 头部注释
+
+todo:
+  - "正式导出替换:实测惯量(质量/质心)、collision 凸包分离(现直接复用全精度 visual mesh)"
+  - "tcp 位置按 CAD 抓取中心修正(现 z=0.13 占位)"
+  - "齿轮闭合旋向真机确认(URDF 头部第 4 条配方);传动比/行程实测后同步 hex-controller GR80 模型(ratio/pos_max/opening_poly)"
