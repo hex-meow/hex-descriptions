@@ -1,19 +1,35 @@
 # 产品清单 —— 机器可校验的契约(tools/validate.py)。tag 必须等于这里的 version(gp80/v<version>)。
-model: gp80                  # == URDF <robot name>;运行时查找键(PCB 报 model 选 URDF)
-kind: hand                   # RobotKind: arm | base | lift | hand(夹爪/灵巧手)
-version: 0.1.0               # 描述版本(仅同一硬件的描述修订;硬件不兼容变更=新 model 身份,见 06 §硬件身份)
-# hw_rev: a                  # 可选:同名硬件修订;不兼容硬件变更时新增身份并存,永不删除老身份
-dof: 0                       # 本版为单刚体导出:手指未建模,整体作为固定 tip 载荷参与重力补偿
-joint_names: []
-root_link: base_link         # 安装 link:经 fixed joint 接到 arm.tip_link(运行时由臂拼接整机 URDF)
-package: hex_gp80_description   # 新产品直接采用 hex_<model>_description 命名规范
+model: gp80                     # == URDF <robot name>;运行时查找键(PCB 报 model 选 URDF)
+kind: ee                        # RobotKind: arm | base | lift | ee
+version: 0.2.0                  # 铰接化：双平行爪 + 齿轮显示随动 + tcp
+dof: 1                          # 只有单指直线位移 driver；另一指和齿轮均为 mimic
+joint_names: [finger_joint1]    # m；0=全闭，正=张开，单侧最大 0.03825
+root_link: base_link            # 安装 link：运行时 fixed 接到 arm.tip_link
+tip_link: tcp                   # 抓取中心；trial z=0.13，待 CAD/实物确认
+package: hex_gp80_description
 urdf: urdf/gp80.urdf
 
 provenance:
-  exporter: SW2URDF 1.6.0-4-g7f85cfe
-  exported: "2026-01-21"
-  note: 机械工程师从 SolidWorks 导出(原始 zip 含 log/DS_Store 等,已剔除);CAD 不入库
+  exporter: 结构同事 GP-80_urdf.zip + 仓库正典坐标改造
+  exported: "2026-07-15"
+  adapted: "2026-08-03"
+  note: |
+    新导出提供 base、两只平移手指和驱动齿轮的独立 mesh/惯量。原文件以齿轮角 joint3
+    为 driver，并用 ±0.007 m/rad 驱动两齿条；入库时按 11-ee-api 改为单指位移
+    finger_joint1 driver，另一指和齿轮改为 mimic。
+
+kinematics_note: |
+  q=finger_joint1∈[0,0.03825] m；另一指反向移动同样距离，开口变化 width=2q，
+  最大 0.0765 m。gear_joint=142.857142857q rad；q_max 对应 5.4642857 rad，
+  与原导出上限 5.4643 rad 一致。driver velocity=0.021 m/s 由原齿轮 3 rad/s
+  × 0.007 m/rad 折算。
+
+limits_note: |
+  driver effort=20 N 是把原导出每指 effort=10 N 按功率共轭相加后的值，尚未实测，
+  不得作为额定夹持力或安全限力依据。
 
 todo:
-  - "确认 base_link 原点是否即法兰安装面(EE 自描述需要几何+质量+安装变换;若不是需在 URDF 或拼接处补安装变换)"
-  - "手指铰接建模(变 dof>0)时 MINOR/MAJOR 视关节命名而定"
+  - "按 CAD/实物确认 tcp 抓取中心；trial 值 xyz=0 0 0.13, rpy=0 0 0"
+  - "真机确认齿轮正方向、0=全闭、0.007 m/rad 传动比和 38.25 mm 单侧行程"
+  - "实测名义夹持力/速度后更新 effort/velocity，并同步 hex-controller GP80 model"
+  - "人工检查 convex-hull collision；SRDF 应允许两指在全闭位接触"

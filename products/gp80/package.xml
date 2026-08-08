@@ -2,12 +2,12 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>hex_gp80_description</name>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <description>
-    URDF description of the GP80 gripper (end-effector, ROBOT_KIND_HAND). Single rigid
-    body export: geometry + mass + mount frame; fingers are not articulated in this
-    revision. Attaches to an arm tip_link via a fixed joint at runtime (device
-    self-description, see robot-overall-design 02/05).
+    URDF description of the GP80 one-DOF rack-and-pinion parallel gripper
+    (end-effector, ROBOT_KIND_EE). The canonical driver is one finger's prismatic
+    displacement; the opposite finger and drive gear are mimic joints. Attaches to
+    an arm tip_link via a fixed joint at runtime.
   </description>
   <maintainer email="kisonhe@icloud.com">kisonhe</maintainer>
   <license>MIT</license>

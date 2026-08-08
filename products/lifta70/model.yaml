@@ -1,0 +1,33 @@
+# 产品清单 —— 机器可校验的契约(tools/validate.py)。
+# 正式发布 tag 必须等于这里的 version(lifta70/v<version>)。
+model: lifta70
+kind: lift
+version: 0.0.1
+dof: 1
+joint_names: [lift_joint]       # 平台总升高 m；0=最低位，0.70=物理最高位
+root_link: base_link            # 底部安装基准
+tip_link: arm_mount             # 机械臂安装面；trial 位置由现有 mesh 估算，待 CAD 确认
+package: hex_lifta70_description
+urdf: urdf/lifta70.urdf
+
+provenance:
+  exporter: SW2URDF 1.6.0-4-g7f85cfe + 手工改造
+  exported: "2026-07-08"
+  adapted: "2026-07-25"
+  note: |
+    visual mesh、质量、质心和惯量来自 /home/kisonhe/temp/xpkg_urdf_lift。
+    原导出把两个串联关节的行程都误写成 0.336 m；按结构确认修正为平台总行程
+    0.70 m，并改为平台 driver + 中间段 0.5 倍 mimic 的并联运动树。
+
+limits_note: |
+  lift_joint.upper=0.70 是底端到顶端的物理总行程；运行时固件会另行派生软限位。
+  velocity=0.035 m/s 采用当前 lift-driver 的保守试验值，中间段相应为 0.0175 m/s。
+  effort=6 N 仅保留自原始 SW2URDF 导出，明显不是已验证的名义推力，不得作为载荷或
+  安全依据；正式版必须由结构/电气联合给出平台坐标下的名义推力。
+
+todo:
+  - "机械正式重导出：保持三 link/两运动副/一 DOF 契约，提供准确 visual、质量、质心和惯量"
+  - "按 CAD 机械臂安装基准确认 arm_mount；trial 值 xyz=-0.0225 0 0.514, rpy=0 0 0"
+  - "用实测名义平台推力替换 URDF effort=6，并确认额定载荷"
+  - "人工检查 convex-hull collision；platform_link 的单凸包可能过于保守"
+  - "发布前统一 PCB/firmware 的现有 model 名 lift_70 与本产品标识 lifta70"

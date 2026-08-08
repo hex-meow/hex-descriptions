@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>hex_lifta70_description</name>
+  <version>0.0.1</version>
+  <description>
+    Trial URDF description of the LiftA70 two-stage telescopic lift
+    (ROBOT_KIND_LIFT). The public lift_joint is platform height over the
+    0.70 m physical stroke; the intermediate stage follows at half travel
+    through a mimic joint.
+  </description>
+  <maintainer email="kisonhe@icloud.com">kisonhe</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
