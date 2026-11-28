@@ -3,7 +3,7 @@ model: gr80                  # == URDF <robot name>;运行时查找键
 kind: ee                     # RobotKind: arm | base | lift | ee(HAND→EE 改名,11-ee-api §0.3)
 version: 0.0.1               # trial:手改试验导出先行入库(mock/GUI 联调用),正式导出后升 0.1.0
 dof: 1                       # driver 关节数(mimic 从动不算 DOF,11 §9;validate.py 已 mimic 感知)
-joint_names: [jaw_joint1]    # 单爪角 rad,0=全闭,0.6=全开;jaw_joint2 mimic(+1,轴反),gear_joint mimic(×2.618)
+joint_names: [jaw_joint1]    # 夹爪输入角(rad),0 全闭,-0.266 全开;全开时两爪几何角 -0.6 rad,齿轮角约 -1.5708 rad
 root_link: base_link         # 安装 link:经 fixed joint 接到 arm.tip_link(运行时由臂拼接整机 URDF)
 tip_link: tcp                # 抓取中心(TCP,占位 z=0.13,按 CAD 修正)
 package: hex_gr80_description
